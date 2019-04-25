@@ -16,7 +16,7 @@ BIN = $(patsubst $(BUILDDIR)/%.o,%,$(OBJ2))
 CFLAGS = -I$(INCDIR) -Wall -Wextra -g -O3 -DDEBUG
 LINK = $(LIB) 
 
-all: $(LIB) bins
+all: init $(LIB) bins
 
 bins: $(LIB) $(OBJ2)
 	$(foreach bin,$(BIN),$(CXX) -o $(BINDIR)/$(bin) $(BUILDDIR)/$(bin).o $(LINK);)
@@ -35,5 +35,8 @@ clean:
 
 install: $(patsubst %,$(BINDIR)/%,$(BIN))
 	cp $(patsubst %,$(BINDIR)/%,$(BIN)) $(HOME)/bin
+
+init:
+	mkdir -p $(BINDIR) $(BUILDDIR) $(LIBDIR)
 
 -include $(DEP)
