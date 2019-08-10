@@ -549,6 +549,7 @@ struct NativeTexture
 	void readXbox(std::istream &txd);
 	uint32 writeD3d(std::ostream &txd);
 	void writeTGA(void);
+	void writePNG(void);
 
 	void convertFromPS2(uint32 aref);
 	void processPs2Swizzle(uint32 mip);

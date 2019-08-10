@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <renderware.h>
+#include <png.h>
 
 using namespace std;
 
@@ -877,6 +878,44 @@ void NativeTexture::writeTGA(void)
 		writeUInt8(texels[0][j*4+3], tga);
 	}
 	tga.close();
+}
+
+void NativeTexture::writePNG(void)
+{
+	if (depth != 32)
+	{
+		cout << "not writing file: " << filename << endl;
+		return;
+	}
+	
+	char filename[36];
+	strcpy(filename, name.c_str());
+	strcat(filename, ".png");
+
+	// RGBA
+	const int PIXEL_SIZE = 4;
+	const int BIT_DEPTH = 8;
+	const int width = this->width[0];
+	const int height = this->height[0];
+
+	FILE *fp = fopen(filename, "wb");
+	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
+	png_infop info_ptr = png_create_info_struct(png_ptr);
+	png_init_io(png_ptr, fp);
+	png_set_IHDR(png_ptr, info_ptr, width, height, BIT_DEPTH,
+			PNG_COLOR_TYPE_RGBA, PNG_INTERLACE_NONE,
+			PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+
+	png_set_bgr(png_ptr);
+	png_write_info(png_ptr, info_ptr);
+
+	for (uint32 y = 0; y < height; y++)
+	{
+		png_write_row(png_ptr, &texels[0][y * PIXEL_SIZE * width * sizeof(png_byte)]);
+	}
+
+	png_write_end(png_ptr, NULL);
+	fclose(fp);
 }
 
 NativeTexture::NativeTexture(void)

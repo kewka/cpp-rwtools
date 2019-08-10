@@ -7,14 +7,14 @@ SRC := $(patsubst %.cpp,$(SRCDIR)/%.cpp,dffread.cpp dffwrite.cpp\
   ps2native.cpp xboxnative.cpp oglnative.cpp uvanim.cpp\
   txdread.cpp txdwrite.cpp renderware.cpp)
 SRC2 := $(patsubst %.cpp,$(SRCDIR)/%.cpp,\
-  dffconv.cpp txdconv.cpp txdex.cpp dumprwtree.cpp)
+  dffconv.cpp txdconv.cpp txdex.cpp dumprwtree.cpp txd2png.cpp)
 OBJ := $(patsubst $(SRCDIR)/%.cpp,$(BUILDDIR)/%.o,$(SRC))
 OBJ2 := $(patsubst $(SRCDIR)/%.cpp,$(BUILDDIR)/%.o,$(SRC2))
 DEP := $(patsubst $(SRCDIR)/%.cpp,$(BUILDDIR)/%.d,$(SRC) $(SRC2))
 LIB = $(LIBDIR)/librwtools.a
 BIN = $(patsubst $(BUILDDIR)/%.o,%,$(OBJ2))
 CFLAGS = -I$(INCDIR) -Wall -Wextra -g -O3 -DDEBUG
-LINK = $(LIB) 
+LINK = $(LIB) -lpng
 
 all: init $(LIB) bins
 
